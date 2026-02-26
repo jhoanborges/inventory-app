@@ -18,4 +18,31 @@ buildscript {
     }
 }
 
+allprojects {
+    repositories {
+        maven {
+            url("$rootDir/../node_modules/@react-native-async-storage/async-storage/android/local_repo")
+        }
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {
+                project.android {
+                    defaultConfig {
+                        externalNativeBuild {
+                            cmake {
+                                arguments "-DCMAKE_OBJECT_PATH_MAX=1024",
+                                          "-DCMAKE_SUPPRESS_REGENERATION=ON"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 apply plugin: "com.facebook.react.rootproject"

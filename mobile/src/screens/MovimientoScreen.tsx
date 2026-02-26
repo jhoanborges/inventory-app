@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
-import {TextInput, Button, Title, SegmentedButtons} from 'react-native-paper';
+import {View, Text, Alert} from 'react-native';
 import {useAppDispatch} from '../store/hooks';
 import {addMovimiento} from '../store/movimientosSlice';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {SegmentedButtons, StyledTextInput, StyledButton} from '../components/ui';
+import type {StackNavigationProp} from '@react-navigation/stack';
 import type {RouteProp} from '@react-navigation/native';
 
 type Props = {
   route: RouteProp<{params: {producto_id: number}}, 'params'>;
-  navigation: NativeStackNavigationProp<any>;
+  navigation: StackNavigationProp<any>;
 };
 
 export default function MovimientoScreen({route, navigation}: Props) {
@@ -21,7 +21,7 @@ export default function MovimientoScreen({route, navigation}: Props) {
 
   const handleSubmit = async () => {
     if (!cantidad || parseInt(cantidad) <= 0) {
-      Alert.alert('Error', 'Ingresa una cantidad válida');
+      Alert.alert('Error', 'Ingresa una cantidad valida');
       return;
     }
     setLoading(true);
@@ -34,7 +34,7 @@ export default function MovimientoScreen({route, navigation}: Props) {
           motivo: motivo || undefined,
         }),
       ).unwrap();
-      Alert.alert('Éxito', 'Movimiento registrado', [
+      Alert.alert('Exito', 'Movimiento registrado', [
         {text: 'OK', onPress: () => navigation.goBack()},
       ]);
     } catch {
@@ -44,8 +44,10 @@ export default function MovimientoScreen({route, navigation}: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <Title style={styles.title}>Nuevo Movimiento</Title>
+    <View className="flex-1 bg-white dark:bg-black p-6">
+      <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">
+        Nuevo Movimiento
+      </Text>
 
       <SegmentedButtons
         value={tipo}
@@ -54,42 +56,31 @@ export default function MovimientoScreen({route, navigation}: Props) {
           {value: 'entrada', label: 'Entrada'},
           {value: 'salida', label: 'Salida'},
         ]}
-        style={styles.segment}
+        className="mb-4"
       />
 
-      <TextInput
+      <StyledTextInput
         label="Cantidad"
         value={cantidad}
         onChangeText={setCantidad}
         keyboardType="numeric"
-        mode="outlined"
-        style={styles.input}
+        placeholder="0"
       />
 
-      <TextInput
+      <StyledTextInput
         label="Motivo (opcional)"
         value={motivo}
         onChangeText={setMotivo}
-        mode="outlined"
-        style={styles.input}
+        placeholder="Razon del movimiento"
       />
 
-      <Button
-        mode="contained"
+      <StyledButton
         onPress={handleSubmit}
         loading={loading}
         disabled={loading}
-        style={styles.button}>
+        className="mt-2">
         Registrar
-      </Button>
+      </StyledButton>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 24, backgroundColor: '#fff'},
-  title: {marginBottom: 24, fontSize: 24},
-  segment: {marginBottom: 16},
-  input: {marginBottom: 16},
-  button: {marginTop: 8},
-});

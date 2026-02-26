@@ -1,34 +1,15 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-paper';
+import {View, Text} from 'react-native';
 
-type Props = {
-  label: string;
-  type: 'origen' | 'destino';
-};
+type Props = {label: string; type: 'origen' | 'destino'};
 
 export default function MapMarker({label, type}: Props) {
   return (
     <View
-      style={[
-        styles.marker,
-        {backgroundColor: type === 'origen' ? '#4caf50' : '#f44336'},
-      ]}>
-      <Text style={styles.text}>{label}</Text>
+      className={`px-2 py-1.5 rounded-lg min-w-[40px] items-center ${
+        type === 'origen' ? 'bg-success' : 'bg-danger'
+      }`}>
+      <Text className="text-xs font-bold text-white">{label}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  marker: {
-    padding: 6,
-    borderRadius: 8,
-    minWidth: 40,
-    alignItems: 'center',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-});

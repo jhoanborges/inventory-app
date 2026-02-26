@@ -11,7 +11,7 @@ import type {
 } from '../types';
 
 const api = axios.create({
-  baseURL: 'http://10.0.2.2:80/api', // Android emulator -> host machine
+  baseURL: 'http://192.168.100.8:80/api', // Local network IP for physical device
   headers: {'Content-Type': 'application/json', Accept: 'application/json'},
 });
 

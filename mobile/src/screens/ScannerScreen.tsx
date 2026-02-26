@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
-import {TextInput, Button, Title} from 'react-native-paper';
+import {View, Text, Alert} from 'react-native';
+import {Search} from 'lucide-react-native';
 import {scanBarcode} from '../services/api';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {StyledTextInput, StyledButton} from '../components/ui';
+import type {StackNavigationProp} from '@react-navigation/stack';
 
 type Props = {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: StackNavigationProp<any>;
 };
 
 export default function ScannerScreen({navigation}: Props) {
@@ -21,37 +22,33 @@ export default function ScannerScreen({navigation}: Props) {
       const {data} = await scanBarcode(barcode.trim());
       navigation.navigate('ProductDetail', {producto: data.data});
     } catch {
-      Alert.alert('No encontrado', 'Producto no encontrado con ese código');
+      Alert.alert('No encontrado', 'Producto no encontrado con ese codigo');
     }
     setLoading(false);
   };
 
   return (
-    <View style={styles.container}>
-      <Title style={styles.title}>Escanear Producto</Title>
-      <TextInput
-        label="Código de barras"
+    <View className="flex-1 bg-white dark:bg-black p-6">
+      <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 text-center mb-6">
+        Escanear Producto
+      </Text>
+
+      <StyledTextInput
+        label="Codigo de barras"
         value={barcode}
         onChangeText={setBarcode}
-        mode="outlined"
-        style={styles.input}
+        placeholder="Ingresa el codigo"
+        leftIcon={<Search size={20} color="#a3a3a3" />}
         onSubmitEditing={handleScan}
       />
-      <Button
-        mode="contained"
+
+      <StyledButton
         onPress={handleScan}
         loading={loading}
         disabled={loading}
-        style={styles.button}>
+        className="mt-2">
         Buscar
-      </Button>
+      </StyledButton>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 24, backgroundColor: '#fff'},
-  title: {marginBottom: 24, fontSize: 24, textAlign: 'center'},
-  input: {marginBottom: 16},
-  button: {marginTop: 8},
-});

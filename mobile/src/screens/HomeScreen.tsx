@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, StyleSheet} from 'react-native';
-import {Card, Title, Paragraph, Button} from 'react-native-paper';
+import {View, ScrollView, Text} from 'react-native';
+import {Sun, Moon, Package, AlertTriangle, Truck, ArrowLeftRight} from 'lucide-react-native';
 import {useAppDispatch} from '../store/hooks';
 import {logoutThunk} from '../store/authSlice';
 import {getProductos, getRutas, getMovimientos} from '../services/api';
+import {useTheme} from '../context/ThemeContext';
+import {StyledCard, StyledButton} from '../components/ui';
 
 export default function HomeScreen() {
   const dispatch = useAppDispatch();
+  const {toggleTheme, isDark} = useTheme();
   const [stats, setStats] = useState({
     totalProductos: 0,
     stockBajo: 0,
@@ -34,49 +37,79 @@ export default function HomeScreen() {
     load();
   }, []);
 
+  const iconColor = isDark ? '#f5f5f5' : '#171717';
+
   return (
-    <ScrollView style={styles.container}>
-      <Title style={styles.title}>Dashboard</Title>
-      <View style={styles.grid}>
-        <Card style={styles.card}>
-          <Card.Content>
-            <Paragraph>Total Productos</Paragraph>
-            <Title>{stats.totalProductos}</Title>
-          </Card.Content>
-        </Card>
-        <Card style={styles.card}>
-          <Card.Content>
-            <Paragraph>Stock Bajo</Paragraph>
-            <Title style={{color: 'red'}}>{stats.stockBajo}</Title>
-          </Card.Content>
-        </Card>
-        <Card style={styles.card}>
-          <Card.Content>
-            <Paragraph>Rutas Activas</Paragraph>
-            <Title style={{color: 'green'}}>{stats.rutasActivas}</Title>
-          </Card.Content>
-        </Card>
-        <Card style={styles.card}>
-          <Card.Content>
-            <Paragraph>Movimientos</Paragraph>
-            <Title>{stats.movimientos}</Title>
-          </Card.Content>
-        </Card>
+    <ScrollView className="flex-1 bg-neutral-100 dark:bg-black p-4">
+      <View className="flex-row justify-between items-center mb-4">
+        <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+          Dashboard
+        </Text>
+        <StyledButton
+          variant="outlined"
+          onPress={toggleTheme}
+          className="px-3 py-2">
+          {isDark ? 'Claro' : 'Oscuro'}
+        </StyledButton>
       </View>
-      <Button
-        mode="outlined"
-        onPress={() => dispatch(logoutThunk())}
-        style={styles.logout}>
-        Cerrar Sesión
-      </Button>
+
+      <View className="flex-row flex-wrap gap-3">
+        <StyledCard className="w-[47%] mb-2">
+          <View className="flex-row items-center mb-2">
+            <Package size={18} color={iconColor} />
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400 ml-2">
+              Total Productos
+            </Text>
+          </View>
+          <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+            {stats.totalProductos}
+          </Text>
+        </StyledCard>
+
+        <StyledCard className="w-[47%] mb-2">
+          <View className="flex-row items-center mb-2">
+            <AlertTriangle size={18} color="#dc2626" />
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400 ml-2">
+              Stock Bajo
+            </Text>
+          </View>
+          <Text className="text-2xl font-bold text-danger">
+            {stats.stockBajo}
+          </Text>
+        </StyledCard>
+
+        <StyledCard className="w-[47%] mb-2">
+          <View className="flex-row items-center mb-2">
+            <Truck size={18} color="#16a34a" />
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400 ml-2">
+              Rutas Activas
+            </Text>
+          </View>
+          <Text className="text-2xl font-bold text-success">
+            {stats.rutasActivas}
+          </Text>
+        </StyledCard>
+
+        <StyledCard className="w-[47%] mb-2">
+          <View className="flex-row items-center mb-2">
+            <ArrowLeftRight size={18} color={iconColor} />
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400 ml-2">
+              Movimientos
+            </Text>
+          </View>
+          <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+            {stats.movimientos}
+          </Text>
+        </StyledCard>
+      </View>
+
+      <View className="mt-6">
+        <StyledButton
+          variant="outlined"
+          onPress={() => dispatch(logoutThunk())}>
+          Cerrar Sesion
+        </StyledButton>
+      </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, backgroundColor: '#f5f5f5'},
-  title: {marginBottom: 16, fontSize: 24},
-  grid: {flexDirection: 'row', flexWrap: 'wrap', gap: 12},
-  card: {width: '47%', marginBottom: 8},
-  logout: {marginTop: 24},
-});

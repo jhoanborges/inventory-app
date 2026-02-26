@@ -1,6 +1,6 @@
 import React from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import {Card, Title, Paragraph, Divider} from 'react-native-paper';
+import {ScrollView, Text} from 'react-native';
+import {StyledCard, Divider} from '../components/ui';
 import type {Ruta} from '../types';
 import type {RouteProp} from '@react-navigation/native';
 
@@ -12,31 +12,47 @@ export default function RutaDetailScreen({route}: Props) {
   const {ruta} = route.params;
 
   return (
-    <ScrollView style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Content>
-          <Title>{ruta.nombre}</Title>
-          <Divider style={styles.divider} />
-          <Paragraph>Origen: {ruta.origen}</Paragraph>
-          <Paragraph>Destino: {ruta.destino}</Paragraph>
-          <Paragraph>Estado: {String(ruta.estado)}</Paragraph>
-          {ruta.vehiculo && <Paragraph>Vehículo: {ruta.vehiculo}</Paragraph>}
-          {ruta.operador && (
-            <Paragraph>Operador: {ruta.operador.name}</Paragraph>
-          )}
-          <Divider style={styles.divider} />
-          {ruta.fecha_inicio && (
-            <Paragraph>Inicio: {ruta.fecha_inicio}</Paragraph>
-          )}
-          {ruta.fecha_fin && <Paragraph>Fin: {ruta.fecha_fin}</Paragraph>}
-        </Card.Content>
-      </Card>
+    <ScrollView className="flex-1 bg-neutral-100 dark:bg-black p-4">
+      <StyledCard className="mb-4">
+        <Text className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+          {ruta.nombre}
+        </Text>
+
+        <Divider />
+
+        <Text className="text-sm text-neutral-700 dark:text-neutral-300">
+          Origen: {ruta.origen}
+        </Text>
+        <Text className="text-sm text-neutral-700 dark:text-neutral-300 mt-1">
+          Destino: {ruta.destino}
+        </Text>
+        <Text className="text-sm text-neutral-700 dark:text-neutral-300 mt-1">
+          Estado: {String(ruta.estado)}
+        </Text>
+        {ruta.vehiculo && (
+          <Text className="text-sm text-neutral-700 dark:text-neutral-300 mt-1">
+            Vehiculo: {ruta.vehiculo}
+          </Text>
+        )}
+        {ruta.operador && (
+          <Text className="text-sm text-neutral-700 dark:text-neutral-300 mt-1">
+            Operador: {ruta.operador.name}
+          </Text>
+        )}
+
+        <Divider />
+
+        {ruta.fecha_inicio && (
+          <Text className="text-sm text-neutral-700 dark:text-neutral-300">
+            Inicio: {ruta.fecha_inicio}
+          </Text>
+        )}
+        {ruta.fecha_fin && (
+          <Text className="text-sm text-neutral-700 dark:text-neutral-300 mt-1">
+            Fin: {ruta.fecha_fin}
+          </Text>
+        )}
+      </StyledCard>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, backgroundColor: '#f5f5f5'},
-  card: {marginBottom: 16},
-  divider: {marginVertical: 12},
-});
