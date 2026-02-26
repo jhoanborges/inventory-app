@@ -1,0 +1,8 @@
+node_modules/
+.env
+*.sqlite
+.next/
+out/
+src-tauri/target/
+.claude/
+vendor/
